@@ -1,0 +1,22 @@
+Downtime = 
+/* Logic: There could be multiple incidents open for the same application at the same time. This will lead to overcount the downtime. 
+The solution is to navigate the calendar table and for each day check if at least one ticket was open, if yes, the day is considered as part of the calculation.
+
+IMPORTANT: This measure REQUIRES an application filter context, ie, it only works if there's a single value of Issues[Affected Application].
+
+TO DO: Consider time granularity*/
+
+VAR Total_Downtime = 
+IF(HASONEVALUE(Issues[Affected Application]),
+COUNTROWS(FILTER(Dates, 
+          VAR Current_Date = Dates[Date]
+          RETURN
+          CALCULATE(COUNTROWS(Issues),
+                    ALLEXCEPT(Issues, Issues[Affected Application], Issues[Issue Type]), 
+                    Issues[Created (MM/dd/yyyy)] <= Current_Date,
+                    Issues[Closed_date] >= Current_Date) > 0)))
+
+VAR Initial_Date = MIN(Dates[Date])
+VAR Last_Date = MIN(MAX(Dates[Date]), TODAY())
+RETURN
+divide(Total_Downtime, YEARFRAC(Initial_Date, Last_Date)*365)
