@@ -1,0 +1,19 @@
+Dates = 
+//******* Change FactSales by corresponding table name and DateKey by corresponding date column
+VAR MinYear = YEAR(MIN(Fact_Table[Date_Column]))
+VAR MaxYear = YEAR(MAX(Fact_Table[Date_Column]))
+RETURN
+
+ADDCOLUMNS (
+    FILTER (
+        CALENDARAUTO( ), 
+        AND(YEAR([Date]) >= MinYear, YEAR([Date]) <= MaxYear)
+    ),
+    "Calendar Year", YEAR([Date]),
+    "Quarter", QUARTER([Date]),
+    "Month Name", FORMAT ([Date], "mmm"),
+    "Month Number", MONTH ( [Date] ),
+    "Year Month", 100*YEAR([Date]) + MONTH([Date]),
+    "Weekday", FORMAT ( [Date], "dddd" ),
+    "Weekday number", WEEKDAY( [Date] )
+)
