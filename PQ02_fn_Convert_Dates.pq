@@ -2,8 +2,8 @@ let func =
  // fn_Convert_Dates
 (date) =>
 let
-    text_dates =  try Date.ToText(date, "MM/dd/yyyy") otherwise Text.BeforeDelimiter(date, " "),
-    Result = Date.FromText(text_dates, [Format = "dd/MM/yyyy"])
+    text_dates =  try Date.ToText(date, "M/d/yyyy") otherwise Text.BeforeDelimiter(date, " "),
+    Result = Date.FromText(text_dates, [Format = "d/M/yyyy"])
 in
     Result ,
 documentation = [
