@@ -1,0 +1,75 @@
+[
+  {
+    "ID": "DAX_COLUMNS_FULLY_QUALIFIED",
+    "Name": "Column references should be fully qualified",
+    "Category": "DAX Expressions",
+    "Description": "Using fully qualified column references makes it easier to distinguish between column and measure references, and also helps avoid certain errors.",
+    "Severity": 2,
+    "Scope": "Measure, CalculatedColumn, CalculatedTable, KPI",
+    "Expression": "DependsOn.Any(Key.ObjectType = \"Column\" and Value.Any(not FullyQualified))",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "DAX_DIVISION_COLUMNS",
+    "Name": "Avoid division (use DIVIDE function instead)",
+    "Category": "DAX Expressions",
+    "Description": "Calculated Columns, Measures or Calculated Tables should not use the division symbol in their expressions (/) unless the denominator is a constant value. Instead, it is advised to always use the DIVIDE(<numerator>,<denominator>) function.",
+    "Severity": 3,
+    "Scope": "Measure, CalculatedColumn, CalculatedTable",
+    "Expression": "Tokenize().Any(\n    Type = DIV and\n    Next.Type <> INTEGER_LITERAL and\n    Next.Type <> REAL_LITERAL\n)",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "DAX_MEASURES_UNQUALIFIED",
+    "Name": "Measure references should be unqualified",
+    "Category": "DAX Expressions",
+    "Description": "Using unqualified measure references makes it easier to distinguish between column and measure references, and also helps avoid certain errors.",
+    "Severity": 2,
+    "Scope": "Measure, CalculatedColumn, CalculatedTable, KPI",
+    "Expression": "DependsOn.Any(Key.ObjectType = \"Measure\" and Value.Any(FullyQualified))",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "META_AVOID_FLOAT",
+    "Name": "Do not use floating point data types",
+    "Category": "Metadata",
+    "Description": "Floating point datatypes can cause unexpected results when evaluating values close to 0. Use Currency / Fixed Decimal Number (decimal) instead.",
+    "Severity": 3,
+    "Scope": "DataColumn, CalculatedColumn, CalculatedTableColumn",
+    "Expression": "DataType = \"Double\"",
+    "FixExpression": "DataType = DataType.Decimal",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "PERF_UNUSED_COLUMNS",
+    "Name": "Remove unused columns",
+    "Category": "Performance",
+    "Description": "Hidden columns, which do not have any dependencies, are not used in any relationships, not used in any hierarchies and not used as the SortByColumn for other columns, will likely not be used by clients and thus take up unnecessary space. Consider removing the columns from the model to save space and improve processing time, if you are certain that no external DAX or MDX queries make use of the columns.",
+    "Severity": 2,
+    "Scope": "DataColumn, CalculatedColumn, CalculatedTableColumn",
+    "Expression": "not IsVisible\n\nand ReferencedBy.Count = 0 \n\nand (not UsedInRelationships.Any())\n\nand (not UsedInSortBy.Any())\n\nand (not UsedInHierarchies.Any())\n\nand (not UsedInVariations.Any())",
+    "FixExpression": "Delete()",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "PERF_UNUSED_MEASURES",
+    "Name": "Remove unused measures",
+    "Category": "Performance",
+    "Description": "Hidden measures, that are not referenced by any DAX expression, should be removed.",
+    "Severity": 1,
+    "Scope": "Measure",
+    "Expression": "not IsVisible\nand ReferencedBy.Count = 0",
+    "FixExpression": "Delete()",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "UPPERCASE_FIRST_LETTER_MEASURES_TABLES",
+    "Name": "Measure and table names must start with uppercase letter",
+    "Category": "Naming Conventions",
+    "Description": "Avoid using prefixes and camelCasing. Use \"Sales\" instead of \"dimSales\" or \"mSales\".",
+    "Severity": 2,
+    "Scope": "Table, Measure, CalculatedTable",
+    "Expression": "IsVisible\nand char.IsLower(Name[0])\nand (Model.Cultures.Count = 0 or TranslatedNames.Any(it = \"\" or it = outerIt.Name))\n",
+    "CompatibilityLevel": 1200
+  }
+]
