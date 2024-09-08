@@ -1,7 +1,12 @@
-Dates = 
+DimDate = 
 //******* Change FactSales by corresponding table name and DateKey by corresponding date column
-VAR MinYear = YEAR(MIN(Fact_Table[Date_Column]))
-VAR MaxYear = YEAR(MAX(Fact_Table[Date_Column]))
+VAR Min_Data_Year = YEAR(MIN(FactSales[DateKey]))
+VAR Max_Data_Year = YEAR(MAX(FactSales[DateKey]))
+
+// ***************  DO NOT MODIFY BELOW THIS LINE ************************************
+VAR MinYear = MIN(Min_Data_Year, Custom_Min)
+VAR MaxYear = MAX(Max_Data_Year, Custom_Max)
+
 RETURN
 
 ADDCOLUMNS (
@@ -11,6 +16,7 @@ ADDCOLUMNS (
     ),
     "Calendar Year", YEAR([Date]),
     "Quarter", QUARTER([Date]),
+    "Quarter Label", "Q" & QUARTER([Date]),
     "Month Name", FORMAT ([Date], "mmm"),
     "Month Number", MONTH ( [Date] ),
     "Year Month", 100*YEAR([Date]) + MONTH([Date]),
