@@ -1,0 +1,25 @@
+let 
+    func =   
+    ( InputTable as table, ColumnsToTransform as list, DesiredType as type ) =>
+    let
+        ColsCount = List.Count(ColumnsToTransform),
+        ColsAndTypes = List.Zip( { ColumnsToTransform, List.Repeat( {DesiredType}, ColsCount)}),
+        TableWithNewDataTypes = Table.TransformColumnTypes(InputTable, ColsAndTypes)
+    in
+        TableWithNewDataTypes,
+        
+    documentation = [
+        Documentation.Name =  " fn_Transform_Columns_To_Type ",
+        Documentation.Description = "Transforms specified columns in a table to a desired data type.",
+        Documentation.LongDescription = "This function receives a table, a list of columns to transform, and a desired data type. It applies the transformation to each specified column, converting them into the desired data type. Custom function created by: Orlando Mezquita.",
+        Documentation.Category = "Table Transformation",
+        Documentation.Source = "Custom",
+        Documentation.Version = "1.0",
+        Documentation.Examples = {[
+            Description =  "Transform two columns (Column2 and Column3) to type number.",
+            Code = "fn_Transform_Columns_To_Type(myTable, {""Column2"", ""Column3""}, type number)",
+            Result = "Returns the table with the specified columns transformed to the number type."
+        ]}
+    ]
+in  
+    Value.ReplaceType(func, Value.ReplaceMetadata(Value.Type(func), documentation))
