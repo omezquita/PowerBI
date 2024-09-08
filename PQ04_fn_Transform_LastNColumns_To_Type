@@ -1,0 +1,26 @@
+= let
+    fn_Transform_LastNColumns_To_Type = 
+    (InputTable as table, LastN as number, DesiredType as type) =>
+    let
+        ColumnNames = Table.ColumnNames(InputTable),
+        ColsCount = List.Count(ColumnNames),
+        LastNCols = List.Skip(ColumnNames, ColsCount - LastN),
+        ResultTable = fn_Transform_Columns_To_Type(InputTable, LastNCols, DesiredType)
+    in
+        ResultTable,
+        
+    documentation = [
+        Documentation.Name =  " fn_Transform_LastNColumns_To_Type ",
+        Documentation.Description = "Transforms the last N columns of a table to a desired data type.",
+        Documentation.LongDescription = "This function receives a table, the number of last N columns to transform, and a desired data type. It identifies the last N columns and applies the transformation to them using the fn_Transform_Columns_To_Type function. Custom function created by: Orlando Mezquita.",
+        Documentation.Category = "Table Transformation",
+        Documentation.Source = "Custom",
+        Documentation.Version = "1.0",
+        Documentation.Examples = {[
+            Description =  "Convert the last 2 columns of a table to type number.",
+            Code = "fn_Transform_LastNColumns_To_Type(myTable, 2, type number)",
+            Result = "Returns the table with the last 2 columns transformed to the number type."
+        ]}
+    ]
+in  
+    Value.ReplaceType(fn_Transform_LastNColumns_To_Type, Value.ReplaceMetadata(Value.Type(fn_Transform_LastNColumns_To_Type), documentation))
